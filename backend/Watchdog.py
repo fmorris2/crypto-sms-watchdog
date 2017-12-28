@@ -9,7 +9,6 @@ class Watchdog:
 
     COIN_MARKET_CAP_API_ENDPOINT = 'https://api.coinmarketcap.com/v1/ticker/'
     PERCENT_CHANGE_THRESHOLD = 15
-    NEW_LINE = '%0a'
 
     CYCLE_TIME = 60 #in seconds
     coins = []
@@ -51,9 +50,9 @@ class Watchdog:
 
     def notify_sms(self, coin_index):
         coin = self.coins[coin_index]
-        msg = coin[0]+" has changed notably. New info: " + self.NEW_LINE \
-                + "Market cap (USD): $" + Watchdog.human_format(float(coin[1][0])) + self.NEW_LINE \
-                + ", % change (1h): " + coin[1][1] + "%" + self.NEW_LINE \
+        msg = coin[0]+" has changed notably. New info: " \
+                + "Market cap (USD): $" + self.human_format(float(coin[1][0])) \
+                + ", % change (1h): " + coin[1][1] + "%" \
                 + ", % change (24h): " + coin[1][2] + "%"
 
         for number in self.mobile_numbers:
@@ -61,7 +60,7 @@ class Watchdog:
                                     from_= self.twilio_creds[2],
                                     body=msg)
 
-    def human_format(num):
+    def human_format(self, num):
         num = float('{:.3g}'.format(num))
         magnitude = 0
         while abs(num) >= 1000:
