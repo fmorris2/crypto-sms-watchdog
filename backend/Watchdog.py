@@ -47,14 +47,12 @@ class Watchdog:
             num_two = new_info[i]
             diff = abs(float(num_one) - float(num_two))
             perc_change = (diff / float(num_one)) * 100
-            if perc_change >= self.PERCENT_CHANGE_THRESHOLD:
-                return True
-        return False
+            return perc_change >= self.PERCENT_CHANGE_THRESHOLD
 
     def notify_sms(self, coin_index):
         coin = self.coins[coin_index]
         msg = coin[0]+" has changed notably. New info: " + self.NEW_LINE \
-                + "Market cap (USD): $" + self.human_format(float(coin[1][0])) + self.NEW_LINE \
+                + "Market cap (USD): $" + Watchdog.human_format(float(coin[1][0])) + self.NEW_LINE \
                 + ", % change (1h): " + coin[1][1] + "%" + self.NEW_LINE \
                 + ", % change (24h): " + coin[1][2] + "%"
 
