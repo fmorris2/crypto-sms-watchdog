@@ -34,6 +34,10 @@ class Watchdog:
     def has_change(self, coin_index):
         new_info = self.get_coin_info(self.coins[coin_index][0])
         old_info = self.coins[coin_index][1]
+
+        if(new_info is None or old_info is None):
+            return False
+
         has_notable_change = self.has_notable_change(old_info, new_info)
         if has_notable_change:
             self.coins[coin_index] = (self.coins[coin_index][0], new_info)
@@ -70,9 +74,12 @@ class Watchdog:
 
     def get_coin_info(self, coin):
         print coin
-        response = get(self.COIN_MARKET_CAP_API_ENDPOINT+coin)
-        json = response.json()[0]
-        return (json['market_cap_usd'],json['percent_change_1h'], json['percent_change_24h'])
+        try:
+            response = get(self.COIN_MARKET_CAP_API_ENDPOINT+coin)
+            json = response.json()[0]
+            return (json['market_cap_usd'],json['percent_change_1h'], json['percent_change_24h'])
+        except Exception:
+            return None
 
     def load_coins(self):
         for coin in open(self.root_path + self.COINS_FILE_PATH).read().splitlines():
