@@ -32,6 +32,9 @@ class Watchdog:
             time.sleep(self.CYCLE_TIME)
 
     def has_change(self, coin_index):
+        if(self.coins[coin_index][0] == 'trident'):
+            return True
+
         new_info = self.get_coin_info(self.coins[coin_index][0])
         old_info = self.coins[coin_index][1]
 
@@ -57,15 +60,20 @@ class Watchdog:
 
     def notify_sms(self, coin_index):
         coin = self.coins[coin_index]
-        msg = coin[0]+" has changed notably. New info: " \
-                + "Market cap (USD): $" + self.human_format(float(coin[1][0])) \
-                + ", % change (1h): " + coin[1][1] + "%" \
-                + ", % change (24h): " + coin[1][2] + "%"
+        msg =  coin[1][5]+" ("+coin[1][6]+")\n" \
+                + "Market cap: $" + self.human_format(float(coin[1][0])) + "\n" \
+                + "Price: $" + self.human_format(float(coin[1][4])) + "\n" \
+                + "1h: " + self.plus_prepended(coin[1][1]) + "%\n" \
+                + "24h: " + self.plus_prepended(coin[1][2]) + "%\n" \
+                + "7d: " + self.plus_prepended(coin[1][3]) + "%\n" \
 
         for number in self.mobile_numbers:
             self.sms_client.messages.create(to=number,
                                     from_= self.twilio_creds[2],
                                     body=msg)
+
+    def plus_prepended(self, str):
+        return str if "-" in str else "+"+str
 
     def human_format(self, num):
         num = float('{:.3g}'.format(num))
@@ -80,7 +88,9 @@ class Watchdog:
         try:
             response = get(self.COIN_MARKET_CAP_API_ENDPOINT+coin)
             json = response.json()[0]
-            return (json['market_cap_usd'],json['percent_change_1h'], json['percent_change_24h'])
+            return (json['market_cap_usd'],json['percent_change_1h'],
+                    json['percent_change_24h'], json['percent_change_7d'],
+                    json['price_usd'], json['name'], json['symbol'])
         except Exception:
             return None
 
