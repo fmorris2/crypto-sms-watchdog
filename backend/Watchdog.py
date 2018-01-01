@@ -32,9 +32,6 @@ class Watchdog:
             time.sleep(self.CYCLE_TIME)
 
     def has_change(self, coin_index):
-        if(self.coins[coin_index][0] == 'trident'):
-            return True
-
         new_info = self.get_coin_info(self.coins[coin_index][0])
         old_info = self.coins[coin_index][1]
 
