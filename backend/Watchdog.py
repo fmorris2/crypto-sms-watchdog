@@ -8,7 +8,7 @@ class Watchdog:
     TWILIO_CREDS_FILE_PATH = '/data/twilio_credentials'
 
     COIN_MARKET_CAP_API_ENDPOINT = 'https://api.coinmarketcap.com/v1/ticker/'
-    PERCENT_CHANGE_THRESHOLD = 15
+    PERCENT_CHANGE_THRESHOLD = 10
 
     CYCLE_TIME = 60 #in seconds
     coins = []
@@ -34,6 +34,9 @@ class Watchdog:
     def has_change(self, coin_index):
         new_info = self.get_coin_info(self.coins[coin_index][0])
         old_info = self.coins[coin_index][1]
+
+        if(old_info is None):
+            self.coins[coin_index][1] = new_info
 
         if(new_info is None or old_info is None):
             return False
