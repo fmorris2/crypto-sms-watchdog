@@ -35,10 +35,10 @@ class Watchdog:
         new_info = self.get_coin_info(self.coins[coin_index][0])
         old_info = self.coins[coin_index][1]
 
-        if(old_info is None):
+        if old_info is None:
             self.coins[coin_index][1] = new_info
 
-        if(new_info is None or old_info is None):
+        if new_info is None or old_info is None:
             return False
 
         has_notable_change = self.has_notable_change(old_info, new_info)
@@ -48,7 +48,7 @@ class Watchdog:
         return has_notable_change
 
     def has_notable_change(self, old_info, new_info):
-        for i in range(0, len(old_info)):
+        for i in range(0, 3):
             num_one = old_info[i]
             num_two = new_info[i]
             diff = abs(float(num_one) - float(num_two))
