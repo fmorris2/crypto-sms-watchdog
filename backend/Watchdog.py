@@ -70,6 +70,9 @@ class Watchdog:
                                     body=msg)
 
     def plus_prepended(self, str):
+        if str is None:
+            return "N/A"
+
         return str if "-" in str else "+"+str
 
     def human_format(self, num):
